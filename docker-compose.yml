@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+
+  nestjs:
+    container_name: api-nestjs-ovh
+    ports: 
+      - 3000:3000
+    depends_on:
+      - db
+    build: 
+      context: ./
+    volumes: 
+      - ./:/app
+      - /app/node_modules
+      - /app/dist
+    env_file: ./.env
+
+  db:
+    image: mariadb
+    container_name: mariadb
+    restart: always
+    environment:
+      MYSQL_DATABASE: dbtest1      
+      MYSQL_USER: root
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - 3306:3306
+    volumes:
+      - mariadbdata:/var/lib/mysql
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 3307:8080
+
+volumes:
+  mariadbdata:
